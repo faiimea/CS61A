@@ -36,6 +36,42 @@ class VendingMachine:
     'Here is your soda.'
     """
     "*** YOUR CODE HERE ***"
+    def __init__(self,name,price):
+        self.name=name
+        self.price=price
+        self.balance=0
+        self.stock=0
+
+    def vend(self):
+        if self.stock==0:
+            return 'Inventory empty. Restocking required.'
+        elif self.balance<self.price:
+            return f'You must add ${self.price - self.balance} more funds.'
+        else:
+            if self.balance % self.price == 0:
+                self.stock-=(self.balance/self.price)
+                self.balance=0
+                print('DEBUG',self.stock)
+                return f'Here is your {str(self.name)}.'
+            else:
+                tmp=self.balance % self.price
+                self.stock-=(self.balance//self.price)
+                self.balance=0
+                print('DEBUG',self.stock)
+                return f'Here is your {self.name} and ${tmp} change.'
+    
+    def add_funds(self,mon):
+        if self.stock==0:
+            return f'Inventory empty. Restocking required. Here is your ${mon}.'
+        else:
+            self.balance+=mon
+            return f'Current balance: ${self.balance}'
+
+    def restock(self,num):
+        self.stock+=num
+        return f'Current {self.name} stock: {self.stock}'
+    
+
 
 
 def store_digits(n):
@@ -54,6 +90,17 @@ def store_digits(n):
     >>> print("Do not use str or reversed!") if any([r in cleaned for r in ["str", "reversed"]]) else None
     """
     "*** YOUR CODE HERE ***"
+    if n<10:
+        return Link(n)
+    else:
+        tmp=n
+        i=0
+        while tmp>10:
+            tmp//=10
+            i+=1
+        rem=n-tmp*(10**i)
+        return Link(tmp,store_digits(rem))
+
 
 
 def path_yielder(t, value):
@@ -92,9 +139,12 @@ def path_yielder(t, value):
     """
 
     "*** YOUR CODE HERE ***"
-
-    for _______________ in _________________:
-        for _______________ in _________________:
+    # by hint
+    if t.label == value:
+        yield [t.label]
+    for i in t.branches:
+        for path in path_yielder(i,value):
+            yield [t.label] + path
 
             "*** YOUR CODE HERE ***"
 
